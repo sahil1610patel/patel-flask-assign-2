@@ -1,0 +1,26 @@
+steps:
+  # Step 1: Build the Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'sahil161/patel-flask-app', '.']
+
+  # Step 2: Push the Docker image to Docker Hub
+  - name: 'gcr.io/cloud-builders/docker'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        docker login --username=$$DOCKER_USERNAME --password=$$DOCKER_PASSWORD
+        docker push sahil161/patel-flask-app
+    env:
+      - 'DOCKER_USERNAME=$$DOCKER_USERNAME'
+      - 'DOCKER_PASSWORD=$$DOCKER_PASSWORD'
+
+  # Step 3: Update the Compute Engine instance with the new container image
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    args:
+      - compute
+      - instances
+      - update-container
+      - patel-flask-instance
+      - --zone=us-central1-a
+      - --container-image=sahil161/patel-flask-app
