@@ -1,3 +1,5 @@
+options:
+  logging: CLOUD_LOGGING_ONLY
 steps:
   # Step 1: SSH into the Compute Engine instance and pull the latest Docker image from Docker Hub
   - name: gcr.io/cloud-builders/gcloud
