@@ -7,11 +7,11 @@ steps:
       - |
         echo "$$DOCKERHUB_PASSWORD" | docker login -u "$$DOCKERHUB_USERNAME" --password-stdin
         docker build -t sahil161/patel-flaskapp-assign2:latest .
-        docker push sahil161/patel-flaskapp-assign2:latest
+        docker push sahil161l/patel-flaskapp-assign2:latest
     secretEnv: ['DOCKERHUB_USERNAME', 'DOCKERHUB_PASSWORD']
 
   # Step 1: Reset the instance to pull the latest image
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim-391.0.0'
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:516.0.0-slim'
     args:
       - compute
       - instances
@@ -19,9 +19,10 @@ steps:
       - patel-flask-instance
       - --zone=us-central1-a
 
-# Specify logging option
+# Specify logging option and machine type
 options:
   logging: CLOUD_LOGGING_ONLY
+  machineType: 'E2_HIGHCPU_8'
 
 # Reference the secrets
 availableSecrets:
