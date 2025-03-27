@@ -1,28 +1,23 @@
 steps:
-  # Step 1: Log in to Docker Hub using credentials from Secret Manager
+  # Step 1: Log in, build, and push the Docker image
   - name: 'gcr.io/cloud-builders/docker'
     entrypoint: 'bash'
     args:
       - '-c'
       - |
         echo "$$DOCKERHUB_PASSWORD" | docker login -u "$$DOCKERHUB_USERNAME" --password-stdin
+        docker build -t sahil161/patel-flaskapp-assign2:latest .
+        docker push sahil161/patel-flaskapp-assign2:latest
     secretEnv: ['DOCKERHUB_USERNAME', 'DOCKERHUB_PASSWORD']
 
-  # Step 2: Build the Docker image
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'sahil161/patel-flaskapp-assign2:latest', '.']
-
-  # Step 3: Push the image to Docker Hub
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'sahil161/patel-flaskapp-assign2:latest']
-
-  # Step 4: Restart the container on the instance
+  # Step 2: Reset the instance to pull the latest image
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     args:
-      - '-c'
-      - |
-        gcloud compute ssh patel-flask-instance --zone us-central1-a --command "docker stop \$(docker ps -q) && docker run -d -p 5000:5000 sahil161/patel-flaskapp-assign2:latest"
-    entrypoint: 'bash'
+      - compute
+      - instances
+      - reset
+      - patel-flask-instance
+      - --zone=us-central1-a
 
 # Specify logging option
 options:
