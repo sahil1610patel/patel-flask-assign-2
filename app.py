@@ -3,6 +3,6 @@ app = Flask(__name__)
 
 @app.route('/')
 def hello():
-    return "Hello Cloud! Code Updated"
+    return "Hello Cloud! Code triggerd"
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)
