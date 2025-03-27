@@ -12,12 +12,13 @@ steps:
 
   # Step 1: Reset the instance to pull the latest image
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:516.0.0-slim'
+    entrypoint: 'gcloud'
     args:
-      - compute
-      - instances
-      - reset
-      - patel-flask-instance
-      - --zone=us-central1-a
+      - 'compute'
+      - 'instances'
+      - 'reset'
+      - 'patel-flask-instance'
+      - '--zone=us-central1-a'
 
 # Specify logging option and machine type
 options:
