@@ -20,7 +20,7 @@ options:
 # Reference the secrets
 availableSecrets:
   secretManager:
-    - versionName: projects/terra-453319/secrets/DOCKERHUB_USERNAME/versions/latest
+    - versionName: projects/terra-453319/secrets/dockerhub-username/versions/latest
       env: DOCKERHUB_USERNAME
-    - versionName: projects/terra-453319/secrets/DOCKERHUB_PASSWORD/versions/latest
+    - versionName: projects/terra-453319/secrets/dockerhub-password/versions/latest
       env: DOCKERHUB_PASSWORD
