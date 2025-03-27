@@ -1,38 +1,14 @@
-options:
-  logging: CLOUD_LOGGING_ONLY
 steps:
-  # Step 1: SSH into the Compute Engine instance and pull the latest Docker image from Docker Hub
-  - name: gcr.io/cloud-builders/gcloud
+  # Build the Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'sahil161/patel-flaskapp-assign2:latest', '.']
+  # Push the image to Docker Hub
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'sahil161/patel-flaskapp-assign2:latest']
+  # Restart the container on the instance
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     args:
-      - compute
-      - ssh
-      - "patel-flask-instance"
-      - "--zone=us-central1-a"
-      - "--command=sudo docker pull sahil161/patel-flask-app:latest"
-
-  # Step 2: Stop the existing container
-  - name: gcr.io/cloud-builders/gcloud
-    args:
-      - compute
-      - ssh
-      - "patel-flask-instance"
-      - "--zone=us-central1-a"
-      - "--command=sudo docker stop gifted_lovelace || true"
-
-  # Step 3: Remove the old container
-  - name: gcr.io/cloud-builders/gcloud
-    args:
-      - compute
-      - ssh
-      - "patel-flask-instance"
-      - "--zone=us-central1-a"
-      - "--command=sudo docker rm gifted_lovelace || true"
-
-  # Step 4: Run the new container
-  - name: gcr.io/cloud-builders/gcloud
-    args:
-      - compute
-      - ssh
-      - "patel-flask-instance"
-      - "--zone=us-central1-a"
-      - "--command=sudo docker run -d -p 80:5000--name gifted_lovelace sahil161/patel-flask-app:latest"
+      - '-c'
+      - |
+        gcloud compute ssh sahil161-flask-instance --zone us-central1-a --command "docker stop \$(docker ps -q) && docker run -d -p 5000:5000 sahil161/patel-flaskapp-assign2:latest"
+    entrypoint: 'bash'
