@@ -1,5 +1,5 @@
 steps:
-  # Step 1: Log in, build, and push the Docker image
+  # Step 0: Log in, build, and push the Docker image
   - name: 'gcr.io/cloud-builders/docker'
     entrypoint: 'bash'
     args:
@@ -10,8 +10,8 @@ steps:
         docker push sahil161/patel-flaskapp-assign2:latest
     secretEnv: ['DOCKERHUB_USERNAME', 'DOCKERHUB_PASSWORD']
 
-  # Step 2: Reset the instance to pull the latest image
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  # Step 1: Reset the instance to pull the latest image
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim-391.0.0'
     args:
       - compute
       - instances
