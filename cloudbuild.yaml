@@ -16,3 +16,11 @@ steps:
     # Add logging option to resolve the error
 options:
   logging: CLOUD_LOGGING_ONLY
+
+# Reference the secrets
+availableSecrets:
+  secretManager:
+    - versionName: projects/terra-453319/secrets/sahil161/versions/latest
+      env: DOCKERHUB_USERNAME
+    - versionName: projects/sahil161/secrets/dockerhub-password/versions/latest
+      env: DOCKERHUB_PASSWORD
