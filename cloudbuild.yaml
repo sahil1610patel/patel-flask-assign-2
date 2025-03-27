@@ -1,26 +1,37 @@
 steps:
-  # Build the Docker image
+  # Step 1: Log in to Docker Hub using credentials from Secret Manager
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'sahil161/patel-flaskapp-assign2:latest', '.']
-  # Push the image to Docker Hub
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        echo "$$DOCKERHUB_PASSWORD" | docker login -u "$$DOCKERHUB_USERNAME" --password-stdin
+    secretEnv: ['DOCKERHUB_USERNAME', 'DOCKERHUB_PASSWORD']
+
+  # Step 2: Build the Docker image
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'sahil161/patel-flaskapp-assign2:latest']
-  # Restart the container on the instance
+    args: ['build', '-t', 'sahil1610patel/patel-flaskapp-assign2:latest', '.']
+
+  # Step 3: Push the image to Docker Hub
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'sahil1610patel/patel-flaskapp-assign2:latest']
+
+  # Step 4: Restart the container on the instance
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     args:
       - '-c'
       - |
-        gcloud compute ssh sahil161-flask-instance --zone us-central1-a --command "docker stop \$(docker ps -q) && docker run -d -p 5000:5000 sahil161/patel-flaskapp-assign2:latest"
+        gcloud compute ssh patel-flask-instance --zone us-central1-a --command "docker stop \$(docker ps -q) && docker run -d -p 5000:5000 sahil1610patel/patel-flaskapp-assign2:latest"
     entrypoint: 'bash'
 
-    # Add logging option to resolve the error
+# Specify logging option
 options:
   logging: CLOUD_LOGGING_ONLY
 
 # Reference the secrets
 availableSecrets:
   secretManager:
-    - versionName: projects/terra-453319/secrets/dockerhub-username/versions/latest
+    - versionName: projects/<your-project-id>/secrets/dockerhub-username/versions/latest
       env: DOCKERHUB_USERNAME
-    - versionName: projects/terra-453319/secrets/dockerhub-password/versions/latest
+    - versionName: projects/<your-project-id>/secrets/dockerhub-password/versions/latest
       env: DOCKERHUB_PASSWORD
