@@ -10,18 +10,18 @@ steps:
 
   # Step 2: Build the Docker image
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'sahil1610patel/patel-flaskapp-assign2:latest', '.']
+    args: ['build', '-t', 'sahil16/patel-flaskapp-assign2:latest', '.']
 
   # Step 3: Push the image to Docker Hub
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'sahil1610patel/patel-flaskapp-assign2:latest']
+    args: ['push', 'sahil161/patel-flaskapp-assign2:latest']
 
   # Step 4: Restart the container on the instance
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     args:
       - '-c'
       - |
-        gcloud compute ssh patel-flask-instance --zone us-central1-a --command "docker stop \$(docker ps -q) && docker run -d -p 5000:5000 sahil1610patel/patel-flaskapp-assign2:latest"
+        gcloud compute ssh patel-flask-instance --zone us-central1-a --command "docker stop \$(docker ps -q) && docker run -d -p 5000:5000 sahil161/patel-flaskapp-assign2:latest"
     entrypoint: 'bash'
 
 # Specify logging option
